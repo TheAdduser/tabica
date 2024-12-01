@@ -30,6 +30,7 @@ const login = async () => {
 <template>
   <div class="flex items-center justify-center min-h-screen bg-gray-900">
     <div class="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded shadow-md">
+      <h1 class="text-4xl font-bold text-white text-center">Tab[<span class="text-[#40c27b]">i</span>]ca</h1>
       <h2 class="text-2xl font-bold text-center text-white">Login</h2>
       <div v-if="errorMessage" class="p-2 text-red-600 bg-red-100 rounded">
         {{ errorMessage }}
