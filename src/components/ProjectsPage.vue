@@ -90,6 +90,14 @@ onMounted(() => {
         <div v-if="errorMessage" class="p-2 text-red-600 bg-red-100 rounded">
           {{ errorMessage }}
         </div>
+        <ul class="space-y-2">
+          <li v-for="project in projects" :key="project.id" class="text-white flex justify-between items-center">
+            <router-link :to="'/project/' + project.id">{{ project.name }}</router-link>
+            <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+              Delete
+            </button>
+          </li>
+        </ul>
         <form @submit.prevent="createProject" class="space-y-4">
           <div>
             <label for="newProjectName" class="block mb-2 text-sm font-bold text-gray-300">New Project Name</label>
@@ -99,14 +107,7 @@ onMounted(() => {
             Create Project
           </button>
         </form>
-        <ul class="space-y-2">
-          <li v-for="project in projects" :key="project.id" class="text-white flex justify-between items-center">
-            <router-link :to="'/project/' + project.id">{{ project.name }}</router-link>
-            <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
-              Delete
-            </button>
-          </li>
-        </ul>
+        
       </div>
     </div>
     <Modal
