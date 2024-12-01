@@ -56,7 +56,19 @@ const confirmDeleteProject = (project) => {
 
 const deleteProject = async () => {
   try {
+    // Fetch all project assignments related to the project
+    const assignments = await pb.collection('projectAssignments').getFullList({
+      filter: `project = "${projectToDelete.value.id}"`,
+    });
+
+    // Delete all project assignments
+    for (const assignment of assignments) {
+      await pb.collection('projectAssignments').delete(assignment.id);
+    }
+
+    // Delete the project
     await pb.collection('projects').delete(projectToDelete.value.id);
+
     showModal.value = false;
     fetchProjects();
   } catch (error) {
@@ -90,7 +102,7 @@ onMounted(() => {
         <ul class="space-y-2">
           <li v-for="project in projects" :key="project.id" class="text-white flex justify-between items-center">
             <router-link :to="'/project/' + project.id">{{ project.name }}</router-link>
-            <button @click="confirmDeleteProject(project)" class="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+            <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
               Delete
             </button>
           </li>
@@ -102,7 +114,7 @@ onMounted(() => {
       title="Delete Project"
       message="Are you sure you want to delete this project?"
       @confirm="deleteProject"
-      @cancel="showModal = false"
+      @cancel="showModal.value = false"
     />
   </div>
 </template>
