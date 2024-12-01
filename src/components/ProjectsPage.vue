@@ -1,8 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import PocketBase from 'pocketbase';
-import { useRouter } from 'vue-router';
 import Header from './Header.vue';
+import Modal from './Modal.vue';
+import { useRouter } from 'vue-router';
 
 const pb = new PocketBase('http://127.0.0.1:8090');
 const router = useRouter();
@@ -10,11 +11,13 @@ const router = useRouter();
 const projects = ref([]);
 const newProjectName = ref('');
 const errorMessage = ref('');
+const showModal = ref(false);
+const projectToDelete = ref(null);
 
 const fetchProjects = async () => {
   try {
     projects.value = await pb.collection('projects').getFullList({
-      filter: `owner = "${pb.authStore.model.id}" || assignee ?= "${pb.authStore.model.id}"`,
+      filter: `owner = "${pb.authStore.model.id}"`,
     });
   } catch (error) {
     errorMessage.value = 'Failed to fetch projects';
@@ -28,15 +31,36 @@ const createProject = async () => {
   }
 
   try {
-    await pb.collection('projects').create({
+    const newProject = await pb.collection('projects').create({
       name: newProjectName.value,
       owner: pb.authStore.model.id,
       members: [pb.authStore.model.id],
     });
+
+    await pb.collection('projectAssignments').create({
+      assignee: pb.authStore.model.id,
+      project: newProject.id,
+    });
+
     newProjectName.value = '';
     fetchProjects();
   } catch (error) {
     errorMessage.value = 'Failed to create project';
+  }
+};
+
+const confirmDeleteProject = (project) => {
+  projectToDelete.value = project;
+  showModal.value = true;
+};
+
+const deleteProject = async () => {
+  try {
+    await pb.collection('projects').delete(projectToDelete.value.id);
+    showModal.value = false;
+    fetchProjects();
+  } catch (error) {
+    errorMessage.value = 'Failed to delete project';
   }
 };
 
@@ -54,22 +78,31 @@ onMounted(() => {
         <div v-if="errorMessage" class="p-2 text-red-600 bg-red-100 rounded">
           {{ errorMessage }}
         </div>
-        <div class="space-y-4">
-          <div v-for="project in projects" :key="project.id" class="p-4 bg-gray-700 rounded">
-            <h3 class="text-xl font-bold text-white">{{ project.name }}</h3>
-            <button @click="() => router.push(`/project/${project.id}`)" class="mt-2 px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a]">
-              Open Project
-            </button>
+        <form @submit.prevent="createProject" class="space-y-4">
+          <div>
+            <label for="newProjectName" class="block mb-2 text-sm font-bold text-gray-300">New Project Name</label>
+            <input v-model="newProjectName" type="text" id="newProjectName" class="w-full px-3 py-2 border-black rounded bg-gray-700 text-white" required />
           </div>
-        </div>
-        <div class="mt-6">
-          <h3 class="text-xl font-bold text-white">Create New Project</h3>
-          <input v-model="newProjectName" type="text" placeholder="Project Name" class="w-full px-3 py-2 mt-2 border-black rounded bg-gray-700 text-white" />
-          <button @click="createProject" class="mt-2 px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a]">
+          <button type="submit" class="px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a]">
             Create Project
           </button>
-        </div>
+        </form>
+        <ul class="space-y-2">
+          <li v-for="project in projects" :key="project.id" class="text-white flex justify-between items-center">
+            <router-link :to="'/project/' + project.id">{{ project.name }}</router-link>
+            <button @click="confirmDeleteProject(project)" class="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+              Delete
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
+    <Modal
+      :show="showModal"
+      title="Delete Project"
+      message="Are you sure you want to delete this project?"
+      @confirm="deleteProject"
+      @cancel="showModal = false"
+    />
   </div>
 </template>
