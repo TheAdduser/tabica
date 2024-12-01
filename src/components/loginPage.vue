@@ -47,7 +47,7 @@ const login = async () => {
           <button type="submit" class="px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a]">
             Login
           </button>
-          <router-link to="/register" class="text-sm text-blue-500 hover:underline">Don't have an account? Register</router-link>
+          <span class="text-sm text-white">Don't have an account? <router-link to="/register" class="text-blue-500 hover:underline">Register</router-link></span>
         </div>
       </form>
     </div>

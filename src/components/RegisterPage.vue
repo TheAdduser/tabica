@@ -6,13 +6,21 @@ import { useRouter } from 'vue-router';
 const pb = new PocketBase('http://127.0.0.1:8090');
 const router = useRouter();
 
+const name = ref('');
 const email = ref('');
 const password = ref('');
+const passwordConfirm = ref('');
 const errorMessage = ref('');
 
 const register = async () => {
+  if (password.value !== passwordConfirm.value) {
+    errorMessage.value = 'Passwords do not match';
+    return;
+  }
+
   try {
     await pb.collection('users').create({
+      name: name.value,
       email: email.value,
       password: password.value,
       passwordConfirm: password.value,
@@ -35,18 +43,27 @@ const register = async () => {
       </div>
       <form @submit.prevent="register">
         <div class="mb-4">
+          <label for="name" class="block mb-2 text-sm font-bold text-gray-300">Name</label>
+          <input v-model="name" type="text" id="name" class="w-full px-3 py-2 border-black rounded bg-gray-700 text-white" required />
+        </div>
+        <div class="mb-4">
           <label for="email" class="block mb-2 text-sm font-bold text-gray-300">Email</label>
           <input v-model="email" type="email" id="email" class="w-full px-3 py-2 border-black rounded bg-gray-700 text-white" required />
         </div>
-        <div class="mb-6">
+        <div class="mb-4">
           <label for="password" class="block mb-2 text-sm font-bold text-gray-300">Password</label>
           <input v-model="password" type="password" id="password" class="w-full px-3 py-2 border-black rounded bg-gray-700 text-white" required />
+        </div>
+        <div class="mb-6">
+          <label for="passwordConfirm" class="block mb-2 text-sm font-bold text-gray-300">Confirm Password</label>
+          <input v-model="passwordConfirm" type="password" id="passwordConfirm" class="w-full px-3 py-2 border-black rounded bg-gray-700 text-white" required />
         </div>
         <div class="flex items-center justify-between">
           <button type="submit" class="px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a]">
             Register
           </button>
-          <router-link to="/login" class="text-sm text-blue-500 hover:underline">Already have an account? Login</router-link>
+          <span class="text-sm text-white">Already have an account? <router-link to="/login" class="text-blue-500 hover:underline">Login</router-link></span>
+          
         </div>
       </form>
     </div>
