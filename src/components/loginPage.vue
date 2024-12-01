@@ -20,7 +20,8 @@ const login = async () => {
   try {
     await pb.collection('users').authWithPassword(email.value, password.value)
     errorMessage.value = ''
-    // Redirect to the main page or update the state to show the Kanban board
+    
+    router.push('/projects');
   } catch (error) {
     errorMessage.value = 'Invalid email or password'
   }
