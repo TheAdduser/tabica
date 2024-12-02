@@ -91,11 +91,14 @@ onMounted(() => {
           {{ errorMessage }}
         </div>
         <ul class="space-y-2">
-          <li v-for="project in projects" :key="project.id" class="text-white flex justify-between items-center">
-            <router-link :to="'/project/' + project.id">{{ project.name }}</router-link>
-            <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+          <li v-for="project in projects" :key="project.id" class="text-white flex justify-between float-left w-full p-2 border-black rounded bg-gray-700">
+            <div class="bg-gray-600 p-2 border-black rounded w-full text-2xl font-bold items-center ">
+              <router-link :to="'/project/' + project.id">{{ project.name }}</router-link>
+            
+            <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 float-right text-xl">
               Delete
             </button>
+          </div>
           </li>
         </ul>
         <form @submit.prevent="createProject" class="space-y-4">
