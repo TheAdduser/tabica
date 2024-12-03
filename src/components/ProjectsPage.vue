@@ -34,13 +34,9 @@ const createProject = async () => {
     const newProject = await pb.collection('projects').create({
       name: newProjectName.value,
       owner: pb.authStore.model.id,
-      members: [pb.authStore.model.id],
+      assignee: pb.authStore.model.id
     });
 
-    await pb.collection('projectAssignments').create({
-      assignee: pb.authStore.model.id,
-      project: newProject.id,
-    });
 
     newProjectName.value = '';
     fetchProjects();
@@ -56,17 +52,7 @@ const confirmDeleteProject = (project) => {
 
 const deleteProject = async () => {
   try {
-    // Fetch all project assignments related to the project
-    const assignments = await pb.collection('projectAssignments').getFullList({
-      filter: `project = "${projectToDelete.value.id}"`,
-    });
 
-    // Delete all project assignments
-    for (const assignment of assignments) {
-      await pb.collection('projectAssignments').delete(assignment.id);
-    }
-
-    // Delete the project
     await pb.collection('projects').delete(projectToDelete.value.id);
 
     showModal.value = false;
@@ -75,6 +61,14 @@ const deleteProject = async () => {
     errorMessage.value = 'Failed to delete project';
   }
 };
+
+async function cancelModal() {
+  try {
+    showModal.value = false;
+  } catch (error) {
+    errorMessage.value = 'failed to cancel modal';
+  }
+}
 
 onMounted(() => {
   fetchProjects();
@@ -91,14 +85,17 @@ onMounted(() => {
           {{ errorMessage }}
         </div>
         <ul class="space-y-2">
-          <li v-for="project in projects" :key="project.id" class="text-white flex justify-between float-left w-full p-2 border-black rounded bg-gray-700">
-            <div class="bg-gray-600 p-2 border-black rounded w-full text-2xl font-bold items-center ">
-              <router-link :to="'/project/' + project.id">{{ project.name }}</router-link>
+          <li v-for="project in projects" :key="project.id" class="text-white flex justify-between float-left w-full p-2 border-black rounded bg-gray-700 items-center">
+            <div class="bg-gray-600 p-2 border-black rounded w-full text-2xl font-bold">
+              <router-link :to="'/project/' + project.id">
+                  <div class="break-all">{{ project.name }}</div>
+              </router-link>
+            </div>
+              <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 float-right text-xl max-h-12">
+                    Delete
+                  </button>
             
-            <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 float-right text-xl">
-              Delete
-            </button>
-          </div>
+          
           </li>
         </ul>
         <form @submit.prevent="createProject" class="space-y-4">
@@ -118,7 +115,7 @@ onMounted(() => {
       title="Delete Project"
       message="Are you sure you want to delete this project?"
       @confirm="deleteProject"
-      @cancel="showModal.value = false"
+      @cancel="cancelModal"
     />
   </div>
 </template>
