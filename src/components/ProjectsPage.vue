@@ -79,7 +79,7 @@ onMounted(() => {
   <div>
     <Header />
     <div class="flex flex-col items-center justify-center min-h-screen bg-gray-900">
-      <div class="w-full max-w-2xl p-8 space-y-6 bg-gray-800 rounded shadow-md">
+      <div class="flex-row w-full max-w-2xl p-8 space-y-6 bg-gray-800 rounded shadow-md">
         <h2 class="text-2xl font-bold text-center text-white">Projects</h2>
         <div v-if="errorMessage" class="p-2 text-red-600 bg-red-100 rounded">
           {{ errorMessage }}
