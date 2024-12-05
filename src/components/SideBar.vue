@@ -12,15 +12,14 @@ const errorMessage = ref('');
 const fetchProjects = async () => {
   try {
     projects.value = await pb.collection('projects').getFullList({
-      filter: `owner = "${pb.authStore.model.id}" || assignee = "${pb.authStore.model.id}"`,
     });
   } catch (error) {
     errorMessage.value = 'Failed to fetch projects';
   }
 };
 
-const navigateToProject = (projectId) => {
-  router.push(`/project/${projectId}`);
+const navigateToProjectHub = (projectId) => {
+  router.push(`/hub/${projectId}`);
 };
 
 onMounted(() => {
@@ -35,7 +34,7 @@ onMounted(() => {
       {{ errorMessage }}
     </div>
     <ul class="space-y-2">
-      <li v-for="project in projects" :key="project.id" class="text-white hover:bg-gray-600 p-2 rounded cursor-pointer truncate" @click="navigateToProject(project.id)">
+      <li v-for="project in projects" :key="project.id" class="text-white hover:bg-gray-600 p-2 rounded cursor-pointer truncate" @click="navigateToProjectHub(project.id)">
         {{ project.name }}
       </li>
     </ul>

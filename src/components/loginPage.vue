@@ -21,7 +21,7 @@ const login = async () => {
     await pb.collection('users').authWithPassword(email.value, password.value)
     errorMessage.value = ''
     
-    router.push('/projects');
+    router.push('/hub');
   } catch (error) {
     errorMessage.value = 'Invalid email or password'
   }

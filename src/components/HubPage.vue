@@ -1,14 +1,26 @@
 <script setup>
 import Header from './Header.vue';
 import SideBar from './SideBar.vue';
+import KanbanBoard from './KanbanBoard.vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const projectId = ref(route.params.id);
+
+watch(() => route.params.id, (newId) => {
+  projectId.value = newId;
+});
 </script>
 
 <template>
-  <div class="flex-1">
+  <div class="flex flex-col min-h-screen">
     <Header />
-  </div>
-  <div class="flex h-full ">
-    <SideBar />
-    
+    <div class="flex flex-1">
+      <SideBar class="h-full" />
+      <div class="flex-1 p-4">
+        <KanbanBoard :projectId="projectId" />
+      </div>
+    </div>
   </div>
 </template>

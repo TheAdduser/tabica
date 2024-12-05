@@ -17,7 +17,6 @@ const projectToDelete = ref(null);
 const fetchProjects = async () => {
   try {
     projects.value = await pb.collection('projects').getFullList({
-      filter: `owner = "${pb.authStore.model.id}"`,
     });
   } catch (error) {
     errorMessage.value = 'Failed to fetch projects';
@@ -37,7 +36,6 @@ const createProject = async () => {
       assignee: pb.authStore.model.id
     });
 
-
     newProjectName.value = '';
     fetchProjects();
   } catch (error) {
@@ -52,9 +50,7 @@ const confirmDeleteProject = (project) => {
 
 const deleteProject = async () => {
   try {
-
     await pb.collection('projects').delete(projectToDelete.value.id);
-
     showModal.value = false;
     fetchProjects();
   } catch (error) {
@@ -69,6 +65,10 @@ async function cancelModal() {
     errorMessage.value = 'failed to cancel modal';
   }
 }
+
+const navigateToHub = (projectId) => {
+  router.push(`/hub/${projectId}`);
+};
 
 onMounted(() => {
   fetchProjects();
@@ -87,15 +87,13 @@ onMounted(() => {
         <ul class="space-y-2">
           <li v-for="project in projects" :key="project.id" class="text-white flex justify-between float-left w-full p-2 border-black rounded bg-gray-700 items-center">
             <div class="bg-gray-600 p-2 border-black rounded w-full text-2xl font-bold">
-              <router-link :to="'/hub/'">
-                  <div class="break-all">{{ project.name }}</div>
+              <router-link :to="'/hub/' + project.id">
+                <div class="break-all">{{ project.name }}</div>
               </router-link>
             </div>
-              <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 float-right text-xl max-h-12">
-                    Delete
-                  </button>
-            
-          
+            <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 float-right text-xl max-h-12">
+              Delete
+            </button>
           </li>
         </ul>
         <form @submit.prevent="createProject" class="space-y-4">
@@ -107,7 +105,6 @@ onMounted(() => {
             Create Project
           </button>
         </form>
-        
       </div>
     </div>
     <Modal

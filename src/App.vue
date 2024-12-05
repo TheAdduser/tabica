@@ -7,7 +7,7 @@ const pb = new PocketBase('http://127.0.0.1:8090');
 const isLogged = ref(pb.authStore.isValid);
 
 if (isLogged.value) {
-  router.push('/projects')
+  router.push('/hub')
 }
 else {
   router.push('/login')
