@@ -4,7 +4,7 @@ import PocketBase from 'pocketbase';
 import { useRouter } from 'vue-router';
 
 defineProps({
-  msg: String,
+  isLogged: Boolean
 })
 
 const count = ref(0)

@@ -7,7 +7,7 @@ const router = useRouter();
 
 const logout = () => {
   pb.authStore.clear();
-  router.push('/login');
+  router.push('/');
 };
 </script>
 

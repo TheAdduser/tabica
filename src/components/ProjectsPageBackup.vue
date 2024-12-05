@@ -37,7 +37,6 @@ const createProject = async () => {
       assignee: pb.authStore.model.id
     });
 
-
     newProjectName.value = '';
     fetchProjects();
   } catch (error) {
@@ -87,15 +86,13 @@ onMounted(() => {
         <ul class="space-y-2">
           <li v-for="project in projects" :key="project.id" class="text-white flex justify-between float-left w-full p-2 border-black rounded bg-gray-700 items-center">
             <div class="bg-gray-600 p-2 border-black rounded w-full text-2xl font-bold">
-              <router-link :to="'/hub/'">
+              <router-link :to="'/project/' + project.id">
                   <div class="break-all">{{ project.name }}</div>
               </router-link>
             </div>
               <button @click="confirmDeleteProject(project)" class="ml-4 px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 float-right text-xl max-h-12">
                     Delete
                   </button>
-            
-          
           </li>
         </ul>
         <form @submit.prevent="createProject" class="space-y-4">
