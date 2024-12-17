@@ -32,6 +32,10 @@ const updatePassword = async () => {
     successMessage.value = '';
   }
 };
+
+const goToHub = () => {
+  router.push('/hub');
+};
 </script>
 
 <template>
@@ -67,6 +71,9 @@ const updatePassword = async () => {
         </div>
         <button @click="updatePassword" class="w-full px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a]">
           Update Password
+        </button>
+        <button @click="goToHub" class="w-full px-4 py-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-700 mt-4">
+          Back to Hub
         </button>
       </div>
     </div>
