@@ -2,6 +2,8 @@
 import PocketBase from 'pocketbase';
 import { ref } from 'vue';
 import router from './router';
+import Footer from './components/Footer.vue';
+import { RouterView } from 'vue-router';
 
 const pb = new PocketBase('http://127.0.0.1:8090');
 const isLogged = ref(pb.authStore.isValid);
@@ -16,5 +18,10 @@ else {
 
 
 <template>
-  <router-view />
+  <div class="flex flex-col min-h-screen">
+    <main class="flex-1">
+      <RouterView />
+    </main>
+    <Footer />
+  </div>
 </template>

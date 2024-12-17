@@ -45,7 +45,7 @@ onBeforeUnmount(() => {
 
 <template>
   <header class="w-full bg-gray-800 p-4 flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-white">Tab[<span class="text-[#40c27b]">i</span>]ca</h1>
+    <h1 class="text-2xl font-bold text-white select-none">Tab[<span class="text-[#40c27b]">i</span>]ca</h1>
     <div class="relative" ref="dropdownRef">
       <button @click="toggleDropdown" class="flex items-center space-x-2 p-2 rounded hover:bg-gray-700">
         <img :src="user?.avatar ? `http://127.0.0.1:8090/api/files/users/${user.id}/${user.avatar}` : 'https://via.placeholder.com/40'" alt="Avatar" class="w-10 h-10 rounded-full" />
