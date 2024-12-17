@@ -21,6 +21,7 @@ const updatePassword = async () => {
 
   try {
     await pb.collection('users').update(user.value.id, {
+      oldPassword: currentPassword.value,
       password: newPassword.value,
       passwordConfirm: confirmPassword.value,
     });
