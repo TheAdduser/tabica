@@ -13,6 +13,7 @@ const confirmPassword = ref('');
 const errorMessage = ref('');
 const successMessage = ref('');
 const avatarFile = ref(null);
+const name = ref(user.value.name);
 
 const updatePassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
@@ -60,10 +61,23 @@ const updateAvatar = async () => {
     await pb.collection('users').update(user.value.id, formData);
     successMessage.value = 'Avatar updated successfully';
     errorMessage.value = '';
-    // Refresh user data
     user.value = await pb.collection('users').getOne(pb.authStore.model.id);
   } catch (error) {
     errorMessage.value = 'Failed to update avatar';
+    successMessage.value = '';
+  }
+};
+
+const updateProfile = async () => {
+  try {
+    await pb.collection('users').update(user.value.id, {
+      name: name.value,
+    });
+    successMessage.value = 'Profile updated successfully';
+    errorMessage.value = '';
+    user.value = await pb.collection('users').getOne(pb.authStore.model.id);
+  } catch (error) {
+    errorMessage.value = 'Failed to update profile';
     successMessage.value = '';
   }
 };
@@ -85,13 +99,12 @@ const goToHub = () => {
       </div>
       <div class="space-y-4">
         <div>
-          <label class="block mb-2 text-sm font-bold text-gray-300">Name</label>
-          <p class="text-white">{{ user?.name }}</p>
+          <label for="name" class="block mb-2 text-sm font-bold text-gray-300">Name</label>
+          <input v-model="name" type="text" id="name" class="w-full px-3 py-2 border-black rounded bg-gray-700 text-white" />
         </div>
-        <div>
-          <label class="block mb-2 text-sm font-bold text-gray-300">Email</label>
-          <p class="text-white">{{ user?.email }}</p>
-        </div>
+        <button @click="updateProfile" class="w-full px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a]">
+          Update Profile
+        </button>
         <div>
           <label class="block mb-2 text-sm font-bold text-gray-300">Avatar</label>
           <div
