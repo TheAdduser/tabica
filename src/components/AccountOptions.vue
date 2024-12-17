@@ -12,6 +12,7 @@ const newPassword = ref('');
 const confirmPassword = ref('');
 const errorMessage = ref('');
 const successMessage = ref('');
+const avatarFile = ref(null);
 
 const updatePassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
@@ -29,6 +30,40 @@ const updatePassword = async () => {
     errorMessage.value = '';
   } catch (error) {
     errorMessage.value = 'Failed to update password';
+    successMessage.value = '';
+  }
+};
+
+const handleFileChange = (event) => {
+  avatarFile.value = event.target.files[0];
+};
+
+const handleDrop = (event) => {
+  event.preventDefault();
+  avatarFile.value = event.dataTransfer.files[0];
+};
+
+const handleDragOver = (event) => {
+  event.preventDefault();
+};
+
+const updateAvatar = async () => {
+  if (!avatarFile.value) {
+    errorMessage.value = 'Please select an avatar file';
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('avatar', avatarFile.value);
+
+  try {
+    await pb.collection('users').update(user.value.id, formData);
+    successMessage.value = 'Avatar updated successfully';
+    errorMessage.value = '';
+    // Refresh user data
+    user.value = await pb.collection('users').getOne(pb.authStore.model.id);
+  } catch (error) {
+    errorMessage.value = 'Failed to update avatar';
     successMessage.value = '';
   }
 };
@@ -56,6 +91,22 @@ const goToHub = () => {
         <div>
           <label class="block mb-2 text-sm font-bold text-gray-300">Email</label>
           <p class="text-white">{{ user?.email }}</p>
+        </div>
+        <div>
+          <label class="block mb-2 text-sm font-bold text-gray-300">Avatar</label>
+          <div
+            class="w-full p-4 border-2 border-dashed border-gray-500 rounded bg-gray-700 text-white text-center"
+            @drop="handleDrop"
+            @dragover="handleDragOver"
+            @click="$refs.fileInput.click()"
+          >
+            <input type="file" class="hidden" @change="handleFileChange" ref="fileInput" />
+            <p v-if="!avatarFile">Drag and drop an avatar image here, or click to select a file</p>
+            <p v-else>{{ avatarFile.name }}</p>
+          </div>
+          <button @click="updateAvatar" class="w-full px-4 py-2 font-bold text-white bg-[#40c27b] rounded hover:bg-[#2f8f5a] mt-4">
+            Update Avatar
+          </button>
         </div>
         <div>
           <label for="currentPassword" class="block mb-2 text-sm font-bold text-gray-300">Current Password</label>
