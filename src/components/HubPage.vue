@@ -14,7 +14,7 @@ watch(() => route.params.id, (newId) => {
 </script>
 
 <template>
-  <div class="flex flex-col min-h-screen">
+  <div class="flex flex-col min-h-screen bg-gray-900">
     <Header />
     <div class="flex flex-1">
       <SideBar class="h-full" />
