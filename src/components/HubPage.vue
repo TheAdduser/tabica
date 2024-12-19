@@ -21,7 +21,7 @@ watch(() => route.params.id, (newId) => {
         <div v-if="projectId">
           <KanbanBoard :projectId="projectId" />
         </div>
-        <div v-else class="flex items-center justify-center h-full text-white">
+        <div v-else class="flex items-center justify-center w-full h-full pt-50 text-white font-bold">
           <p>Please choose a project from the sidebar to proceed.</p>
         </div>
     </div>
