@@ -17,7 +17,7 @@ watch(() => route.params.id, (newId) => {
   <div class="flex flex-col min-h-screen bg-gray-900">
     <Header />
     <div class="flex flex-1">
-      <SideBar class="h-full" />
+      <SideBar/>
       <div class="flex-1 p-4">
         <div v-if="projectId">
           <KanbanBoard :projectId="projectId" />
