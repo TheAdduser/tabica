@@ -28,7 +28,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-44 bg-gray-700 p-4 h-full min-h-screen">
+  <div class="min-w-44 bg-gray-700 p-4 h-full min-h-screen">
     <h2 class="text-xl font-bold text-white mb-4 select-none">Projects</h2>
     <div v-if="errorMessage" class="p-2 text-red-600 bg-red-100 rounded">
       {{ errorMessage }}

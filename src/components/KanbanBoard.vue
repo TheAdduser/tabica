@@ -36,23 +36,19 @@ watch(() => props.projectId, () => {
 </script>
 
 <template>
-  <div>
-    <div v-if="errorMessage" class="p-2 text-red-600 bg-red-100 rounded">
-      {{ errorMessage }}
-    </div>
-    <div class="space-x-4 overflow-scroll">
-       <div class="flex flex-row gap-6 " v-if="columns.length!=0">
+    <div class="space-x-4 overflow-auto mt-4 max-w-[calc(100vw)]">
+       <div class="flex flex-row gap-6 min-h-[calc(100vh-2rem)]" v-if="columns.length!=0">
         <div
           v-for="column in columns.expand.column"
           :key="column"
-          class="p-4 bg-gray-700 rounded shadow-md min-w-44"
+          class="p-4 bg-gray-800 rounded-lg shadow-md min-w-44 max-w-44"
         >
           <h3 class="text-xl font-bold text-white">{{ column.name }}</h3>
           <div class="space-y-2 mt-4">
             <div
               v-for="task in column.expand.task"
               :key="task"
-              class="p-2 bg-gray-600 rounded text-white min-h-30"
+              class="p-2 bg-gray-700 rounded-lg text-white min-h-30 font-bold"
             >
               {{ task.name }}
 
@@ -66,7 +62,6 @@ watch(() => props.projectId, () => {
           </div>
         </div>
       </div>
-    </div>
         
   </div>
 </template>
