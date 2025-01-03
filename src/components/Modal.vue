@@ -19,7 +19,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <div v-if="show" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+  <div v-if="show" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
     <div class="bg-gray-800 p-6 rounded shadow-md w-full max-w-md">
       <h2 class="text-xl font-bold mb-4 text-white">{{ title }}</h2>
       <p class="mb-4 text-white">{{ message }}</p>
